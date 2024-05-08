@@ -12,13 +12,13 @@ import java.util.UUID;
 @Data
 @RequiredArgsConstructor
 public class ShoppingCart {
-    private final String prefix = "cart:";
+    private static final String PREFIX = "cart:";
     private final String cartId;
     private final Instant creationTime;
     private final List<CartProduct> contents;
 
     public ShoppingCart() {
-        this.cartId = prefix + UUID.randomUUID().toString();
+        this.cartId = PREFIX + UUID.randomUUID();
         this.creationTime = Instant.now();
         this.contents = new ArrayList<>();
     }

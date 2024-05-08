@@ -4,6 +4,8 @@ import com.bobi.ShoppingCartService.model.product.CartProduct;
 import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCart;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
@@ -16,12 +18,14 @@ import java.util.Set;
 @Repository
 public class CartRepository {
 
+    @Autowired
     private final StringRedisTemplate template;
     private final ObjectMapper objectMapper;
 
     public CartRepository(StringRedisTemplate template) {
         this.template = template;
         this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false); // to handle Instant properly
     }
 
@@ -50,7 +54,7 @@ public class CartRepository {
 
     public ShoppingCart removeProductFromCart(String cartId, CartProduct productToRemove) throws Exception {
         ShoppingCart cart = loadCart(cartId);
-        cart.getContents().removeIf(product -> product.equals(productToRemove));
+        cart.getContents().removeIf(product -> product.getProductInJson().equals(productToRemove.getProductInJson()));
         saveCart(cart);
         return cart;
     }
@@ -67,5 +71,16 @@ public class CartRepository {
             }
         }
         return carts;
+    }
+
+    public CartProduct getTestView(String cartId, String cartProductId) throws Exception {
+        ShoppingCart cart = loadCart(cartId);
+        if (cart != null && cart.getContents() != null) {
+            return cart.getContents().stream()
+                    .filter(p -> p.getCartProductId().equals(cartProductId))
+                    .findFirst()
+                    .get();
+        }
+        return null;
     }
 }
