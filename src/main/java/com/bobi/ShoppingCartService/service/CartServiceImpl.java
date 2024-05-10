@@ -1,7 +1,7 @@
 package com.bobi.ShoppingCartService.service;
 
-import com.bobi.ShoppingCartService.model.product.CartProduct;
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCart;
+import com.bobi.ShoppingCartService.model.mapper.ShoppingCartMapper;
+import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
 import com.bobi.ShoppingCartService.repository.CartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,30 +13,30 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
+    private final ShoppingCartMapper shoppingCartMapper;
 
     @Override
-    public ShoppingCart addProductToCart(String cartId, String product) throws Exception {
-        CartProduct productToSave = new CartProduct(product);
-        return cartRepository.addProductToCart(cartId, productToSave);
+    public ShoppingCartDTO addProductToCart(String cartId, String product) throws Exception {
+        return shoppingCartMapper.toDTO(cartRepository.addProductToCart(cartId, product));
     }
 
     @Override
-    public ShoppingCart createEmptyCart() throws Exception {
-        return cartRepository.createEmptyCart();
+    public ShoppingCartDTO createEmptyCart() throws Exception {
+        return shoppingCartMapper.toDTO(cartRepository.createEmptyCart());
     }
 
     @Override
-    public ShoppingCart removeProductFromCart(String cartId, CartProduct productToRemove) throws Exception {
-        return cartRepository.removeProductFromCart(cartId, productToRemove);
+    public ShoppingCartDTO removeProductFromCart(String cartId, String productToRemove) throws Exception {
+        return shoppingCartMapper.toDTO(cartRepository.removeProductFromCart(cartId, productToRemove));
     }
 
     @Override
-    public List<ShoppingCart> getAllCarts() throws Exception {
+    public List<ShoppingCartDTO> getAllCarts() throws Exception {
         return cartRepository.getAllCarts();
     }
 
     @Override
-    public CartProduct getTestView(String cartId, String cartProductId) throws Exception {
-        return cartRepository.getTestView(cartId, cartProductId);
+    public List<String> getCartContents(String cartId) throws Exception {
+        return cartRepository.loadCart(cartId).getContentsList();
     }
 }

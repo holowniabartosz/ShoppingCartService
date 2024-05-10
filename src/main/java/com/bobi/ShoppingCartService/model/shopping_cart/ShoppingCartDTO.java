@@ -10,13 +10,13 @@ import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public class ShoppingCart {
+public class ShoppingCartDTO {
     private static final String PREFIX = "cart:";
     private final String cartId;
     private final Instant creationTime;
     private final List<String> contentsList;
 
-    public ShoppingCart() {
+    public ShoppingCartDTO() {
         this.cartId = PREFIX + UUID.randomUUID();
         this.creationTime = Instant.now();
         this.contentsList = new ArrayList<>();
@@ -26,10 +26,10 @@ public class ShoppingCart {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof ShoppingCart))
+        if (!(o instanceof ShoppingCartDTO))
             return false;
 
-        ShoppingCart other = (ShoppingCart) o;
+        ShoppingCartDTO other = (ShoppingCartDTO) o;
 
         return cartId != null &&
                 cartId.equals(other.getCartId());

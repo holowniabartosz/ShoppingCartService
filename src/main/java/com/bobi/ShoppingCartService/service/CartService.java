@@ -1,19 +1,18 @@
 package com.bobi.ShoppingCartService.service;
 
-import com.bobi.ShoppingCartService.model.product.CartProduct;
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCart;
+import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
 
 import java.util.List;
 
 public interface CartService {
 
-    ShoppingCart addProductToCart(String cartId, String product) throws Exception;
+    ShoppingCartDTO addProductToCart(String cartId, String product) throws Exception;
 
-    ShoppingCart createEmptyCart() throws Exception;
+    ShoppingCartDTO createEmptyCart() throws Exception;
 
-    ShoppingCart removeProductFromCart(String cartId, CartProduct productToRemove) throws Exception;
+    ShoppingCartDTO removeProductFromCart(String cartId, String productToRemove) throws Exception;
 
-    List<ShoppingCart> getAllCarts() throws Exception;
+    List<ShoppingCartDTO> getAllCarts() throws Exception;
 
-    CartProduct getTestView(String cartId, String cartProductId) throws Exception;
+    List<String> getCartContents(String cartId) throws Exception;
 }

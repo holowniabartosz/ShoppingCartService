@@ -1,7 +1,8 @@
 package com.bobi.ShoppingCartService.repository;
 
-import com.bobi.ShoppingCartService.model.product.CartProduct;
+import com.bobi.ShoppingCartService.model.mapper.ShoppingCartMapper;
 import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCart;
+import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -21,9 +22,12 @@ public class CartRepository {
     @Autowired
     private final StringRedisTemplate template;
     private final ObjectMapper objectMapper;
+    @Autowired
+    private final ShoppingCartMapper shoppingCartMapper;
 
-    public CartRepository(StringRedisTemplate template) {
+    public CartRepository(StringRedisTemplate template, ShoppingCartMapper shoppingCartMapper) {
         this.template = template;
+        this.shoppingCartMapper = shoppingCartMapper;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false); // to handle Instant properly
@@ -35,52 +39,41 @@ public class CartRepository {
         return cart;
     }
 
-    private void saveCart(ShoppingCart cart) throws Exception {
+    public void saveCart(ShoppingCart cart) throws Exception {
         String jsonCart = objectMapper.writeValueAsString(cart);
         template.opsForValue().set(cart.getCartId(), jsonCart, Duration.ofMinutes(90));
     }
 
-    private ShoppingCart loadCart(String cartId) throws Exception {
+    public ShoppingCart loadCart(String cartId) throws Exception {
         String jsonCart = template.opsForValue().get(cartId);
         return jsonCart == null ? null : objectMapper.readValue(jsonCart, ShoppingCart.class);
     }
 
-    public ShoppingCart addProductToCart(String cartId, CartProduct product) throws Exception {
+    public ShoppingCart addProductToCart(String cartId, String product) throws Exception {
         ShoppingCart cart = loadCart(cartId);
-        cart.getContents().add(product);
+        cart.getContentsList().add(product);
         saveCart(cart);
         return cart;
     }
 
-    public ShoppingCart removeProductFromCart(String cartId, CartProduct productToRemove) throws Exception {
+    public ShoppingCart removeProductFromCart(String cartId, String productToRemove) throws Exception {
         ShoppingCart cart = loadCart(cartId);
-        cart.getContents().removeIf(product -> product.getProductInJson().equals(productToRemove.getProductInJson()));
+        cart.getContentsList().removeIf(product -> product.equals(productToRemove));
         saveCart(cart);
         return cart;
     }
 
-    public List<ShoppingCart> getAllCarts() throws Exception {
+    public List<ShoppingCartDTO> getAllCarts() throws Exception {
         Set<String> cartKeys = template.keys("cart:*");
-        List<ShoppingCart> carts = new ArrayList<>();
+        List<ShoppingCartDTO> carts = new ArrayList<>();
         ValueOperations<String, String> ops = template.opsForValue();
         if (cartKeys != null) {
             for (String key : cartKeys) {
                 String cartData = ops.get(key);
                 ShoppingCart cart = objectMapper.readValue(cartData, ShoppingCart.class);
-                carts.add(cart);
+                carts.add(shoppingCartMapper.toDTO(cart));
             }
         }
         return carts;
-    }
-
-    public CartProduct getTestView(String cartId, String cartProductId) throws Exception {
-        ShoppingCart cart = loadCart(cartId);
-        if (cart != null && cart.getContents() != null) {
-            return cart.getContents().stream()
-                    .filter(p -> p.getCartProductId().equals(cartProductId))
-                    .findFirst()
-                    .get();
-        }
-        return null;
     }
 }

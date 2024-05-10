@@ -13,9 +13,6 @@ import java.util.List;
         configuration = FeignConfig.class
 )
 public interface ProductsServiceClient {
-    @PostMapping(value = "/product/{name}/configure")
+    @PostMapping("/product/{name}/configure")
     String addProductAndConfigureIfApplicable(@PathVariable String name, @RequestBody List<Integer> configuration);
-
-//    @GetMapping(value = "/product/name/{name}")
-//    String getProduct(@PathVariable String name);
 }
