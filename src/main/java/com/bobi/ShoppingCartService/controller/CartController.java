@@ -1,6 +1,6 @@
 package com.bobi.ShoppingCartService.controller;
 
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCartDTO;
 import com.bobi.ShoppingCartService.remote.ProductsServiceClient;
 import com.bobi.ShoppingCartService.service.CartService;
 import lombok.AllArgsConstructor;

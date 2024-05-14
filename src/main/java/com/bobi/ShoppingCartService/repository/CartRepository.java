@@ -1,8 +1,8 @@
 package com.bobi.ShoppingCartService.repository;
 
 import com.bobi.ShoppingCartService.model.mapper.ShoppingCartMapper;
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCart;
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCart;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCartDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -36,6 +36,7 @@ public class CartRepository {
     public ShoppingCart createEmptyCart() throws Exception {
         ShoppingCart cart = new ShoppingCart();
         saveCart(cart);
+        System.out.println("Cart ID: " + cart.getCartId());
         return cart;
     }
 

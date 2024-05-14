@@ -1,7 +1,7 @@
 package com.bobi.ShoppingCartService.model.mapper;
 
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCart;
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCart;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCartDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

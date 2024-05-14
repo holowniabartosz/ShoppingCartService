@@ -1,7 +1,7 @@
 package com.bobi.ShoppingCartService.service;
 
 import com.bobi.ShoppingCartService.model.mapper.ShoppingCartMapper;
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCartDTO;
 import com.bobi.ShoppingCartService.repository.CartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ShoppingCartDTO addProductToCart(String cartId, String product) throws Exception {
+        if (product == null){
+            throw new NullPointerException();
+        }
         return shoppingCartMapper.toDTO(cartRepository.addProductToCart(cartId, product));
     }
 

@@ -1,6 +1,6 @@
 package com.bobi.ShoppingCartService.service;
 
-import com.bobi.ShoppingCartService.model.shopping_cart.ShoppingCartDTO;
+import com.bobi.ShoppingCartService.model.shoppingcart.ShoppingCartDTO;
 
 import java.util.List;
 

@@ -1,26 +1,19 @@
-package com.bobi.ShoppingCartService.model.shopping_cart;
+package com.bobi.ShoppingCartService.model.shoppingcart;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class ShoppingCartDTO {
-    private static final String PREFIX = "cart:";
     private final String cartId;
     private final Instant creationTime;
-    private final List<String> contentsList;
-
-    public ShoppingCartDTO() {
-        this.cartId = PREFIX + UUID.randomUUID();
-        this.creationTime = Instant.now();
-        this.contentsList = new ArrayList<>();
-    }
+    private List<String> contentsList;
 
     @Override
     public boolean equals(Object o) {
